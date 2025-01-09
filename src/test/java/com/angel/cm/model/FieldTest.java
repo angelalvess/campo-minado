@@ -1,6 +1,7 @@
 package com.angel.cm.model;
 
 
+import com.angel.cm.errors.ExplosionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -69,11 +70,50 @@ public class FieldTest {
         assertFalse(field.setOpen());
     }
 
- @Test
+    @Test
     public void openMinedAndMarked () {
         field.toggleMarked();
         field.undermine();
         assertFalse(field.setOpen());
     }
+
+    @Test
+    public void openMinedAndNotMarked () {
+        field.undermine();
+        assertThrows(ExplosionException.class, () -> {
+            field.setOpen();
+        });
+    }
+
+    @Test
+    public void openNeighbours () {
+
+        Fields field11 = new Fields(1, 1);
+        Fields field22 = new Fields(2, 2);
+        field22.addNeighbour(field11);
+        field.addNeighbour(field22);
+        field.setOpen();
+
+        assertTrue(field11.isOpen() && field22.isOpen());
+    }
+
+    @Test
+    public void openNeighboursMined () {
+
+        Fields field11 = new Fields(1, 1);
+        Fields field12 = new Fields(1, 1);
+        field12.undermine();
+
+        Fields field22 = new Fields(2, 2);
+        field22.addNeighbour(field11);
+        field22.addNeighbour(field12);
+
+        field.addNeighbour(field22);
+        field.setOpen();
+
+        assertTrue(field22.isOpen() && field11.isClose());
+    }
+
+
 
 }

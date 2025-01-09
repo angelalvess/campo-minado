@@ -48,16 +48,16 @@ public class Fields {
         }
     }
 
-    boolean setOpen(){
-        if (!open && !marked){
+    boolean setOpen () {
+        if (!open && !marked) {
             open = true;
 
-            if (mined){
+            if (mined) {
                 throw new ExplosionException();
             }
 
-            if (safeNeighbourhood()){
-                neighbours.forEach(v-> v.setOpen());
+            if (safeNeighbourhood()) {
+                neighbours.forEach(v -> v.setOpen());
             }
 
             return true;
@@ -67,17 +67,66 @@ public class Fields {
         return false;
     }
 
-    boolean safeNeighbourhood() {
+    boolean safeNeighbourhood () {
         return neighbours.stream().noneMatch(v -> v.mined);
     }
 
-    void undermine() {
-        if (!mined){
+    void undermine () {
+        if (!mined) {
             mined = true;
         }
     }
 
-    public boolean isMarked() {
+    public boolean isMarked () {
         return marked;
+    }
+
+    public boolean isOpen () {
+        return open;
+    }
+
+    public boolean isClose () {
+        return !isOpen();
+    }
+
+    public boolean objectiveAchieved () {
+        boolean unraveledField = !mined && open;
+        boolean protectedField = mined && marked;
+
+        return unraveledField || protectedField;
+    }
+
+    long countMinedNeighbours() {
+        return neighbours.stream().filter(v -> v.mined).count();
+    }
+
+    void rebootGame () {
+        open = false;
+        mined = false;
+        marked = false;
+    }
+
+    public int getColum () {
+        return colum;
+    }
+
+    public int getRow () {
+        return row;
+    }
+
+    @Override
+    public String toString () {
+        if (marked) {
+            return "X";
+        } else if (open && mined){
+            return "*";
+        } else if (open && countMinedNeighbours() > 0){
+            return Long.toString(countMinedNeighbours());
+        } else if (open) {
+            return " ";
+        } else {
+           return "?";
+        }
+
     }
 }
