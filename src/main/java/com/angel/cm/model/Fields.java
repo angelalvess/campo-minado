@@ -1,5 +1,7 @@
 package com.angel.cm.model;
 
+import com.angel.cm.errors.ExplosionException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,24 +22,62 @@ public class Fields {
     }
 
     boolean addNeighbour (Fields neighbour) {
-        boolean diferentRow = this.row != neighbour.row;
-        boolean diferentColum = this.colum != neighbour.colum;
-        boolean diagonal = diferentRow && diferentColum;
+        boolean differentRow = this.row != neighbour.row;
+        boolean differentColum = this.colum != neighbour.colum;
+        boolean diagonal = differentRow && differentColum;
 
         int deltaRow = Math.abs(this.row - neighbour.row);
         int deltaColum = Math.abs(this.colum - neighbour.colum);
         int deltaGeneral = deltaColum + deltaRow;
 
-        if (deltaGeneral == 1 && !diagonal){
+        if (deltaGeneral == 1 && !diagonal) {
             neighbours.add(neighbour);
             return true;
-        }else if (deltaGeneral == 2 && diagonal){
+        } else if (deltaGeneral == 2 && diagonal) {
             neighbours.add(neighbour);
             return true;
         } else {
-            return  false;
+            return false;
+        }
+
+    }
+
+    void toggleMarked () {
+        if (!open) {
+            marked = !marked;
+        }
+    }
+
+    boolean setOpen(){
+        if (!open && !marked){
+            open = true;
+
+            if (mined){
+                throw new ExplosionException();
+            }
+
+            if (safeNeighbourhood()){
+                neighbours.forEach(v-> v.setOpen());
+            }
+
+            return true;
         }
 
 
+        return false;
+    }
+
+    boolean safeNeighbourhood() {
+        return neighbours.stream().noneMatch(v -> v.mined);
+    }
+
+    void undermine() {
+        if (!mined){
+            mined = true;
+        }
+    }
+
+    public boolean isMarked() {
+        return marked;
     }
 }
