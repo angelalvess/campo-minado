@@ -57,7 +57,7 @@ public class Fields {
             }
 
             if (safeNeighbourhood()) {
-                neighbours.forEach(v -> v.setOpen());
+                neighbours.forEach(Fields::setOpen);
             }
 
             return true;
