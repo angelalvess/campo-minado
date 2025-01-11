@@ -81,6 +81,8 @@ public class Fields {
         return marked;
     }
 
+    public boolean isMined () { return mined;}
+
     public boolean isOpen () {
         return open;
     }
@@ -117,7 +119,7 @@ public class Fields {
     @Override
     public String toString () {
         if (marked) {
-            return "X";
+            return "x";
         } else if (open && mined){
             return "*";
         } else if (open && countMinedNeighbours() > 0){

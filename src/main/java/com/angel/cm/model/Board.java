@@ -2,6 +2,7 @@ package com.angel.cm.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class Board {
 
@@ -40,6 +41,25 @@ public class Board {
 
 
     private void drawMines () {
+        long armedMines = 0;
+        Predicate<Fields> mined = (f) -> f.isMined();
+
+        do {
+
+            armedMines = fields.stream().filter(mined).count();
+
+            int random = (int) (Math.random() * fields.size());
+            fields.get(random).undermine();
+        } while (armedMines < mines);
     }
 
+
+    public boolean objectiveAchievedBoard () {
+        return fields.stream().allMatch(c -> c.objectiveAchieved());
+    }
+
+    public void rebootGameBoard () {
+        fields.forEach(c -> c.rebootGame());
+        drawMines();
+    }
 }
