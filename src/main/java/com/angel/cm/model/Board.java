@@ -62,4 +62,29 @@ public class Board {
         fields.forEach(c -> c.rebootGame());
         drawMines();
     }
+
+    public void openBoard(int row, int colum) {
+        fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.setOpen());
+    }
+
+    public void markedBoard(int row, int colum) {
+        fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.toggleMarked());
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        int i = 0;
+        for (int r = 0; r < rows; r++){
+            for (int c =0; c< columns; c++){
+                sb.append(" ");
+                sb.append(fields.get(i));
+                sb.append(" ");
+                i++;
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString();
+    }
 }
