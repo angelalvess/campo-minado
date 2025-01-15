@@ -116,6 +116,10 @@ public class Fields {
         return row;
     }
 
+     void setOpen (boolean open) {
+        this.open = open;
+    }
+
     @Override
     public String toString () {
         if (marked) {

@@ -1,5 +1,7 @@
 package com.angel.cm.model;
 
+import com.angel.cm.errors.ExplosionException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -46,10 +48,10 @@ public class Board {
 
         do {
 
-            armedMines = fields.stream().filter(mined).count();
 
             int random = (int) (Math.random() * fields.size());
             fields.get(random).undermine();
+            armedMines = fields.stream().filter(mined).count();
         } while (armedMines < mines);
     }
 
@@ -64,7 +66,12 @@ public class Board {
     }
 
     public void openBoard(int row, int colum) {
-        fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.setOpen());
+        try{
+            fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.setOpen());
+        } catch (ExplosionException e){
+            fields.forEach(f -> f.setOpen(true));
+            throw e;
+        }
     }
 
     public void markedBoard(int row, int colum) {
