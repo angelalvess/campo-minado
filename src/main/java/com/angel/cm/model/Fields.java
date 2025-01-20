@@ -1,7 +1,5 @@
 package com.angel.cm.model;
 
-import com.angel.cm.errors.ExplosionException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +51,10 @@ public class Fields {
             open = true;
 
             if (mined) {
-                throw new ExplosionException();
+                /*
+                 TODO implements new version
+                 FIXME
+                */
             }
 
             if (safeNeighbourhood()) {
@@ -81,7 +82,9 @@ public class Fields {
         return marked;
     }
 
-    public boolean isMined () { return mined;}
+    public boolean isMined () {
+        return mined;
+    }
 
     public boolean isOpen () {
         return open;
@@ -98,7 +101,7 @@ public class Fields {
         return unraveledField || protectedField;
     }
 
-    long countMinedNeighbours() {
+    long countMinedNeighbours () {
         return neighbours.stream().filter(v -> v.mined).count();
     }
 
@@ -116,23 +119,11 @@ public class Fields {
         return row;
     }
 
-     void setOpen (boolean open) {
+    void setOpen (boolean open) {
         this.open = open;
     }
 
-    @Override
-    public String toString () {
-        if (marked) {
-            return "x";
-        } else if (open && mined){
-            return "*";
-        } else if (open && countMinedNeighbours() > 0){
-            return Long.toString(countMinedNeighbours());
-        } else if (open) {
-            return " ";
-        } else {
-           return "?";
-        }
 
-    }
+
+
 }

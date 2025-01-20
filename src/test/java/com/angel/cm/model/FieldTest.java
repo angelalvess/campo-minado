@@ -1,7 +1,6 @@
 package com.angel.cm.model;
 
 
-import com.angel.cm.errors.ExplosionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

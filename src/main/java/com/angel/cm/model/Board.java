@@ -1,7 +1,5 @@
 package com.angel.cm.model;
 
-import com.angel.cm.errors.ExplosionException;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -68,7 +66,7 @@ public class Board {
     public void openBoard(int row, int colum) {
         try{
             fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.setOpen());
-        } catch (ExplosionException e){
+        } catch (Exception e){ // TODO implementar excessao
             fields.forEach(f -> f.setOpen(true));
             throw e;
         }
@@ -78,20 +76,5 @@ public class Board {
         fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.toggleMarked());
     }
 
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
 
-        int i = 0;
-        for (int r = 0; r < rows; r++){
-            for (int c =0; c< columns; c++){
-                sb.append(" ");
-                sb.append(fields.get(i));
-                sb.append(" ");
-                i++;
-            }
-            sb.append("\n");
-        }
-
-        return sb.toString();
-    }
 }
