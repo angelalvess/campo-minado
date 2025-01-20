@@ -13,10 +13,21 @@ public class Fields {
     private boolean marked = false;
 
     final private List<Fields> neighbours = new ArrayList<Fields>();
+    private List<FieldObserver> observers = new ArrayList<>();
+
 
     Fields (int row, int colum) {
         this.row = row;
         this.colum = colum;
+    }
+
+
+    public void registerObserver (FieldObserver observer) {
+        observers.add(observer);
+    }
+
+    public void notifyEventForObservers (FieldEvent event) {
+        observers.stream().forEach(observer -> observer.eventOccurred(this, event));
     }
 
     boolean addNeighbour (Fields neighbour) {
@@ -44,18 +55,23 @@ public class Fields {
         if (!open) {
             marked = !marked;
         }
+
+        if (marked) {
+            notifyEventForObservers(FieldEvent.MARK);
+        } else {
+            notifyEventForObservers(FieldEvent.UNCHECK);
+        }
     }
 
     boolean setOpen () {
         if (!open && !marked) {
-            open = true;
 
             if (mined) {
-                /*
-                 TODO implements new version
-                 FIXME
-                */
+                notifyEventForObservers(FieldEvent.EXPLODE);
+                return true;
             }
+
+            setOpen(true);
 
             if (safeNeighbourhood()) {
                 neighbours.forEach(Fields::setOpen);
@@ -121,9 +137,11 @@ public class Fields {
 
     void setOpen (boolean open) {
         this.open = open;
+
+        if (open) {
+            notifyEventForObservers(FieldEvent.OPEN);
+        }
     }
-
-
 
 
 }
