@@ -11,7 +11,6 @@ public class BoardPanel extends JPanel {
 
     setLayout(new GridLayout(board.getRows(), board.getColumns()));
 
-    int total = board.getRows() * board.getColumns();
 
         board.forEachField(field -> add(new ButtonField(field)));
 
