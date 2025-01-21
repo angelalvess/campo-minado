@@ -76,6 +76,7 @@ public class FieldTest {
         assertFalse(field.setOpen());
     }
 
+/*
     @Test
     public void openMinedAndNotMarked () {
         field.undermine();
@@ -83,6 +84,7 @@ public class FieldTest {
             field.setOpen();
         });
     }
+*/
 
     @Test
     public void openNeighbours () {

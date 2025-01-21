@@ -2,15 +2,27 @@ package com.angel.cm.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class Board {
+public class Board implements FieldObserver {
 
     private int rows;
     private int columns;
     private int mines;
 
     private final List<Fields> fields = new ArrayList<Fields>();
+    private final List<Consumer<Boolean>> observers = new ArrayList<>();
+
+
+    public void registerObserver(Consumer<Boolean> observer) {
+        observers.add(observer);
+    }
+
+    public void notifyObservers (boolean result) {
+        observers.stream()
+                .forEach(observer -> observer.accept(result));
+    }
 
     public Board (int columns, int rows, int mines) {
         this.columns = columns;
@@ -26,7 +38,9 @@ public class Board {
     private void generateFields () {
         for (int row = 0; row < rows; row++) {
             for (int colum = 0; colum < columns; colum++) {
-                fields.add(new Fields(row, colum));
+                Fields field = new Fields(row, colum);
+                field.registerObserver(this);
+                fields.add(field);
             }
         }
     }
@@ -64,17 +78,29 @@ public class Board {
     }
 
     public void openBoard(int row, int colum) {
-        try{
+
             fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.setOpen());
-        } catch (Exception e){ // TODO implementar excessao
-            fields.forEach(f -> f.setOpen(true));
-            throw e;
-        }
     }
+
+
 
     public void markedBoard(int row, int colum) {
         fields.stream().filter(c -> c.getRow() == row && c.getColum() == colum).findFirst().ifPresent(c-> c.toggleMarked());
     }
 
 
+    @Override
+    public void eventOccurred (Fields field, FieldEvent event) {
+    if (event == FieldEvent.EXPLODE) {
+        showMines();
+        notifyObservers(false);
+    } else if (objectiveAchievedBoard()) {
+
+        notifyObservers(true);
+    }
+    }
+
+    public void showMines() {
+        fields.stream().filter(f -> f.isMined()).forEach(f-> f.setOpen(true));
+    }
 }
