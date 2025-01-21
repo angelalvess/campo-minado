@@ -3,7 +3,7 @@ package com.angel.cm.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fields {
+public class Field {
 
     private final int row;
     private final int colum;
@@ -12,11 +12,11 @@ public class Fields {
     private boolean open = false;
     private boolean marked = false;
 
-    final private List<Fields> neighbours = new ArrayList<Fields>();
-    private List<FieldObserver> observers = new ArrayList<>();
+    private final List<Field> neighbours = new ArrayList<Field>();
+    private final List<FieldObserver> observers = new ArrayList<>();
 
 
-    Fields (int row, int colum) {
+    Field (int row, int colum) {
         this.row = row;
         this.colum = colum;
     }
@@ -26,11 +26,11 @@ public class Fields {
         observers.add(observer);
     }
 
-    public void notifyEventForObservers (FieldEvent event) {
+    private void notifyEventForObservers (FieldEvent event) {
         observers.stream().forEach(observer -> observer.eventOccurred(this, event));
     }
 
-    boolean addNeighbour (Fields neighbour) {
+    boolean addNeighbour (Field neighbour) {
         boolean differentRow = this.row != neighbour.row;
         boolean differentColum = this.colum != neighbour.colum;
         boolean diagonal = differentRow && differentColum;
@@ -42,9 +42,11 @@ public class Fields {
         if (deltaGeneral == 1 && !diagonal) {
             neighbours.add(neighbour);
             return true;
+
         } else if (deltaGeneral == 2 && diagonal) {
             neighbours.add(neighbour);
             return true;
+
         } else {
             return false;
         }
@@ -63,7 +65,7 @@ public class Fields {
         }
     }
 
-    boolean setOpen () {
+    boolean setOpenn () {
         if (!open && !marked) {
 
             if (mined) {
@@ -74,7 +76,7 @@ public class Fields {
             setOpen(true);
 
             if (safeNeighbourhood()) {
-                neighbours.forEach(Fields::setOpen);
+                neighbours.forEach(Field::setOpenn);
             }
 
             return true;

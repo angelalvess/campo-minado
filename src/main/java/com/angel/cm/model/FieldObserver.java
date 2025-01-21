@@ -3,6 +3,6 @@ package com.angel.cm.model;
 @FunctionalInterface
 public interface FieldObserver {
 
-    public void eventOccurred(Fields field, FieldEvent event);
+    public void eventOccurred(Field field, FieldEvent event);
 
 }

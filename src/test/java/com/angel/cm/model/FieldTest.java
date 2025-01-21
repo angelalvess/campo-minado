@@ -9,32 +9,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class FieldTest {
 
-    private Fields field;
+    private Field field;
 
 
     @BeforeEach
     void initField () {
-        field = new Fields(3, 3);
+        field = new Field(3, 3);
     }
 
 
     @Test
     public void testNeighbourDistanceOne () {
-        Fields neighbour = new Fields(3, 4);
+        Field neighbour = new Field(3, 4);
         boolean result = field.addNeighbour(neighbour);
         assertTrue(result);
     }
 
     @Test
     public void testNeighbourDistanceTwo () {
-        Fields neighbour = new Fields(2, 2);
+        Field neighbour = new Field(2, 2);
         boolean result = field.addNeighbour(neighbour);
         assertTrue(result);
     }
 
     @Test
     public void testNotNeighbour () {
-        Fields neighbour = new Fields(1, 1);
+        Field neighbour = new Field(1, 1);
         boolean result = field.addNeighbour(neighbour);
         assertFalse(result);
     }
@@ -59,21 +59,21 @@ public class FieldTest {
 
     @Test
     public void fieldNotMinedOrMarked () {
-        boolean result = field.setOpen();
+        boolean result = field.setOpenn();
         assertTrue(result);
     }
 
     @Test
     public void openNotMinedButMarked () {
         field.toggleMarked();
-        assertFalse(field.setOpen());
+        assertFalse(field.setOpenn());
     }
 
     @Test
     public void openMinedAndMarked () {
         field.toggleMarked();
         field.undermine();
-        assertFalse(field.setOpen());
+        assertFalse(field.setOpenn());
     }
 
 /*
@@ -81,7 +81,7 @@ public class FieldTest {
     public void openMinedAndNotMarked () {
         field.undermine();
         assertThrows(ExplosionException.class, () -> {
-            field.setOpen();
+            field.setOpenn();
         });
     }
 */
@@ -89,11 +89,11 @@ public class FieldTest {
     @Test
     public void openNeighbours () {
 
-        Fields field11 = new Fields(1, 1);
-        Fields field22 = new Fields(2, 2);
+        Field field11 = new Field(1, 1);
+        Field field22 = new Field(2, 2);
         field22.addNeighbour(field11);
         field.addNeighbour(field22);
-        field.setOpen();
+        field.setOpenn();
 
         assertTrue(field11.isOpen() && field22.isOpen());
     }
@@ -101,16 +101,16 @@ public class FieldTest {
     @Test
     public void openNeighboursMined () {
 
-        Fields field11 = new Fields(1, 1);
-        Fields field12 = new Fields(1, 1);
+        Field field11 = new Field(1, 1);
+        Field field12 = new Field(1, 1);
         field12.undermine();
 
-        Fields field22 = new Fields(2, 2);
+        Field field22 = new Field(2, 2);
         field22.addNeighbour(field11);
         field22.addNeighbour(field12);
 
         field.addNeighbour(field22);
-        field.setOpen();
+        field.setOpenn();
 
         assertTrue(field22.isOpen() && field11.isClose());
     }
