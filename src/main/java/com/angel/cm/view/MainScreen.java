@@ -12,7 +12,7 @@ public class MainScreen extends JFrame {
         add(new BoardPanel(board));
 
 
-        setTitle("campo minado");
+        setTitle("Minefield");
         setSize(690, 438);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);

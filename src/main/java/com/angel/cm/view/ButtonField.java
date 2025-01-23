@@ -6,8 +6,10 @@ import com.angel.cm.model.FieldObserver;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-public class ButtonField extends JButton implements FieldObserver {
+public class ButtonField extends JButton implements FieldObserver, MouseListener {
 
 
     private final Color BG_DEFAULT = new Color(184, 184, 184);
@@ -23,6 +25,7 @@ public class ButtonField extends JButton implements FieldObserver {
         setBackground(BG_DEFAULT);
         setBorder(BorderFactory.createBevelBorder(0));
 
+        addMouseListener(this);
         field.registerObserver(this);
     }
 
@@ -37,10 +40,6 @@ public class ButtonField extends JButton implements FieldObserver {
                 applyStyleMark();
                 break;
 
-            case UNCHECK:
-                applyStyleUncheck();
-                break;
-
             case EXPLODE:
                 applyStyleExplode();
                 break;
@@ -52,17 +51,74 @@ public class ButtonField extends JButton implements FieldObserver {
 
 
     private void applyStyleDefault () {
+        setBackground(BG_DEFAULT);
+        setText("");
     }
 
     private void applyStyleExplode () {
+        setBackground(BG_EXPLODE);
+        setText("💣");
     }
 
-    private void applyStyleUncheck () {
-    }
 
     private void applyStyleMark () {
+        setBackground(BG_EXPLODE);
+        setText("X");
+
     }
 
     private void applyStyleOpen () {
+        setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        if (field.isMined()) {
+            setBackground(BG_EXPLODE);
+            return;
+        }
+
+        setBackground(BG_DEFAULT);
+
+        switch (field.countMinedNeighbours()) {
+            case 1:
+                setForeground(GREEN_TEXT);
+                break;
+            case 2:
+                setForeground(Color.YELLOW);
+                break;
+            case 3:
+                setForeground(Color.BLUE);
+                break;
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+                setForeground(Color.red);
+                break;
+            default:
+                setForeground(Color.PINK);
+        }
+
+        String value = !field.safeNeighbourhood() ? field.countMinedNeighbours() + "" : "";
+        setText(value);
+    }
+
+    @Override
+    public void mouseClicked (MouseEvent e) {
+        if (e.getButton() == 1) {
+            field.setOpenn();
+        } else {
+            field.toggleMarked();
+        }
+    }
+
+    public void mousePressed (MouseEvent e) {
+    }
+
+    public void mouseReleased (MouseEvent e) {
+    }
+
+    public void mouseEntered (MouseEvent e) {
+    }
+
+    public void mouseExited (MouseEvent e) {
     }
 }
