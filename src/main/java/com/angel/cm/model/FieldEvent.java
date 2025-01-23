@@ -2,5 +2,5 @@ package com.angel.cm.model;
 
 public enum FieldEvent {
 
-    OPEN, MARK, UNCHECK, EXPLODE
+    OPEN, MARK, UNCHECK, EXPLODE, RESET
 }

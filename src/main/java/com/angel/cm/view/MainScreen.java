@@ -8,7 +8,7 @@ public class MainScreen extends JFrame {
 
 
     public MainScreen () {
-        Board board = new Board(30, 16, 50);
+        Board board = new Board(30, 16, 6);
         add(new BoardPanel(board));
 
 

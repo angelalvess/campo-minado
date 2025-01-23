@@ -52,18 +52,19 @@ public class ButtonField extends JButton implements FieldObserver, MouseListener
 
     private void applyStyleDefault () {
         setBackground(BG_DEFAULT);
+        setBorder(BorderFactory.createBevelBorder(0));
         setText("");
     }
 
     private void applyStyleExplode () {
         setBackground(BG_EXPLODE);
-        setText("💣");
+        setText("X");
     }
 
 
     private void applyStyleMark () {
         setBackground(BG_EXPLODE);
-        setText("X");
+        setText("O");
 
     }
 

@@ -127,6 +127,7 @@ public class Field {
         open = false;
         mined = false;
         marked = false;
+        notifyEventForObservers(FieldEvent.RESET);
     }
 
     public int getColum () {
